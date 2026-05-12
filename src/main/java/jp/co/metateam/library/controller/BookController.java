@@ -31,7 +31,7 @@ public class BookController {
     public BookController(BookMstService bookMstService){
         this.bookMstService = bookMstService;
     }
-
+//一覧表示
     @GetMapping("/book/index")
     public String index(Model model) {
         // 書籍を全件取得
@@ -41,14 +41,24 @@ public class BookController {
 
         return "book/index";
     }
-
+//新規登録画面を表示
     @GetMapping("/book/add")
     public String add(Model model) {
-        if (!model.containsAttribute("bookMstDto")) {
-            model.addAttribute("bookMstDto", new BookMstDto());
+        if (!model.containsAttribute("bookMstDto")) {//条件分岐　アクセス時空のオブジェクトを作る　modelの中にbookMstDtoがなければ
+            model.addAttribute("bookMstDto", new BookMstDto());//HTMLとJavaをつなぐ空の器
         }
 
         return "book/add";
     }
-    
+    @PostMapping("/book/add")
+    public String add(BookMstDto bookmstDto) {
+       try{
+        this.bookMstService.save(bookmstDto);
+        return "/book/index";
+    }
+    catch (Exception e){
+        return "redirect:/book/index";
+    }
+}
+
 }
